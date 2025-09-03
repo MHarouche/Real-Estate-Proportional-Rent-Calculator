@@ -8,8 +8,8 @@
     :root{
       --bg-1:#eef2ff; --bg-2:#f3e8ff; --panel:#ffffff; --panel-2:#f8faff;
       --text:#0f172a; --muted:#475569; --brand:#4f46e5; --brand-2:#8b5cf6; --accent:#93c5fd;
-      --ring:rgba(79,70,229,.28); --ok:#10b981; --warn:#f59e0b; --err:#ef4444;
-      --radius:18px; --shadow:0 10px 30px rgba(24,39,75,.18);
+      --ring:rgba(79,70,229,.28);
+      --radius:24px; --shadow:0 10px 30px rgba(24,39,75,.18);
     }
     *{box-sizing:border-box}
     html,body{height:100%}
@@ -21,45 +21,48 @@
                  linear-gradient(180deg, var(--bg-1), var(--bg-2));
       display:grid; place-items:center; padding:28px;
     }
-    .app{width:100%; max-width:980px}
+    .app{width:100%; max-width:1100px; border:3px dashed var(--brand-2); border-radius:var(--radius); padding:20px; background:linear-gradient(180deg,#f5f0ff,#f3e8ff)}
     .header{display:flex; gap:14px; align-items:center; justify-content:space-between; margin-bottom:18px}
     .title{display:flex; align-items:center; gap:10px; font-weight:800; letter-spacing:.2px; font-size: clamp(20px, 3vw, 28px)}
     .subtitle{color:var(--muted); font-size:14px}
     .house{width:28px; height:28px; display:inline-block}
     .house path.roof{fill:var(--brand)}
     .house path.body{fill:var(--brand-2)}
-    .grid{display:grid; grid-template-columns:1.15fr 1fr; gap:18px}
+
+    .grid{display:grid; grid-template-columns:1.2fr 1fr; gap:18px}
     @media (max-width:860px){.grid{grid-template-columns:1fr}}
-    .card{background:linear-gradient(180deg, var(--panel), var(--panel-2)); border:1px solid rgba(79,70,229,.12); border-radius:var(--radius); box-shadow:var(--shadow)}
+
+    .card{background:linear-gradient(180deg, var(--panel), var(--panel-2)); border:1px solid rgba(79,70,229,.12); border-radius:18px; box-shadow:var(--shadow)}
     .card .hd{padding:14px 16px; border-bottom:1px solid rgba(79,70,229,.12); display:flex; align-items:center; justify-content:space-between; gap:12px}
     .card .bd{padding:16px}
+
     .row{display:grid; grid-template-columns:1fr 1fr; gap:12px}
-    .row-3{display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px}
-    .row-full{display:block}
-    @media (max-width:520px){.row,.row-3{grid-template-columns:1fr}}
+    @media (max-width:520px){.row{grid-template-columns:1fr}}
+
     label{display:block; font-size:12px; color:var(--muted); margin:4px 0 8px}
-    input[type="number"], input[type="text"], select, input[type="date"]{
+
+    input[type="number"], input[type="text"], input[type="date"]{
       width:100%; appearance:none; background:#f6f8ff; color:var(--text);
       border:1px solid rgba(79,70,229,.2); outline:none; border-radius:12px; padding:12px 14px;
       transition: box-shadow .2s ease, border-color .2s ease;
     }
-    input:focus, select:focus, input[type="date"]:focus{ border-color:var(--brand-2); box-shadow:0 0 0 6px var(--ring) }
+    input:focus{ border-color:var(--brand-2); box-shadow:0 0 0 6px var(--ring) }
+
     .chips{display:flex; gap:8px; flex-wrap:wrap}
-    .chip{border:1px solid rgba(79,70,229,.2); background:#f6f8ff; color:var(--text); padding:8px 10px; border-radius:999px; cursor:pointer; font-size:12px}
+    .chip{border:1px solid rgba(79,70,229,.2); background:#f6f8ff; color:#111827; padding:8px 10px; border-radius:999px; cursor:pointer; font-size:12px}
     .chip:hover{border-color:var(--brand)}
-    .muted{color:var(--muted)}
+
     .btns{display:flex; gap:10px; flex-wrap:wrap}
     .btn{border:1px solid rgba(79,70,229,.2); background: linear-gradient(180deg, #c7d2fe, #a5b4fc); color:#111827; padding:11px 14px; border-radius:12px; cursor:pointer; font-weight:600}
     .btn.primary{background: linear-gradient(180deg, #6366f1, #4f46e5); color:white; border-color:transparent}
     .btn.ghost{background:transparent}
     .btn:active{transform: translateY(1px)}
-    .result{display:grid; gap:12px; grid-template-columns:1fr 1fr; margin-top:10px}
-    @media (max-width:520px){.result{grid-template-columns:1fr}}
+
+    .result{display:grid; gap:12px; grid-template-columns:1fr; margin-top:10px}
     .pill{display:flex; align-items:center; justify-content:space-between; gap:10px; padding:14px; border:1px dashed rgba(139,92,246,.35); background:rgba(241,245,255,.75); border-radius:14px}
     .pill strong{font-size:18px}
+
     .note{font-size:12px; color:var(--muted)}
-    .warn{color:var(--warn)}
-    .err{color:var(--err)}
     .footer{margin-top:16px; text-align:center; color:var(--muted); font-size:12px}
     .footer a{color:var(--brand)}
   </style>
@@ -69,115 +72,100 @@
     <div class="header">
       <div>
         <div class="title">
-          <svg class="house" viewBox="0 0 24 24" aria-hidden="true">
-            <path class="roof" d="M3 10.5L12 3l9 7.5v2l-9-7-9 7z"/>
-            <path class="body" d="M5 11.5h14v8.5a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-8.5z"/>
-            <rect x="9" y="14" width="3.5" height="3.5" rx="0.5" fill="#ffffff" opacity=".8"/>
-          </svg>
+          <svg class="house" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><path class="roof" d="M2 32 L32 6 L62 32 Z"/><path class="body" d="M12 30 H52 V58 H12 Z"/></svg>
           Real Estate Rent Calculator
         </div>
-        <div class="subtitle">Fast proportional splits for 31 · 30 · 29 · 28 days</div>
-      </div>
-      <div class="chips" aria-label="shortcuts">
-        <button class="chip" data-preset="ex1">Example 2403/31/12</button>
-        <button class="chip" data-preset="clear">Clear</button>
+        <div class="subtitle">Fast proportional splits with up to 3 leases</div>
       </div>
     </div>
+
     <div class="grid">
       <section class="card" aria-label="inputs">
-        <div class="hd">
-          <strong>Inputs</strong>
-          <span class="muted" id="statusMsg">Ready to calculate</span>
-        </div>
+        <div class="hd"><strong>Inputs</strong><span class="note" id="statusMsg">Ready</span></div>
         <div class="bd">
-          <div class="row">
-            <div>
-              <label for="currency">Currency</label>
-              <select id="currency">
-                <option value="USD" selected>USD ($)</option>
-                <option value="BRL">BRL (R$)</option>
-                <option value="EUR">EUR (€)</option>
-              </select>
-            </div>
-            <div>
-              <label for="rounding">Rounding</label>
-              <select id="rounding">
-                <option value="normal" selected>Normal (2 decimals)</option>
-                <option value="up">Up</option>
-                <option value="down">Down</option>
-              </select>
-            </div>
-          </div>
-          <div class="row">
-            <div>
-              <label for="monthly">Monthly rent</label>
-              <input id="monthly" type="text" inputmode="decimal" placeholder="e.g., 2403.00" />
-            </div>
-            <div>
-              <label for="daysInMonth">Days in month</label>
-              <input id="daysInMonth" type="number" min="1" max="31" placeholder="e.g., 31" />
-              <div class="chips" style="margin-top:8px">
-                <button class="chip" data-days="28">28</button>
-                <button class="chip" data-days="29">29</button>
-                <button class="chip" data-days="30">30</button>
-                <button class="chip" data-days="31">31</button>
+          <form id="calcForm">
+            <div class="row">
+              <div>
+                <label for="monthly">Monthly rent (USD)</label>
+                <input id="monthly" type="text" inputmode="decimal" placeholder="e.g., 2403.00" />
+              </div>
+              <div>
+                <label for="daysInMonth">Days in month</label>
+                <input id="daysInMonth" type="number" min="1" placeholder="e.g., 31 or any value" />
+                <div class="chips" style="margin-top:8px">
+                  <button class="chip" data-days="28" type="button">28</button>
+                  <button class="chip" data-days="29" type="button">29</button>
+                  <button class="chip" data-days="30" type="button">30</button>
+                  <button class="chip" data-days="31" type="button">31</button>
+                </div>
               </div>
             </div>
-          </div>
-          <div class="row">
-            <div>
-              <label for="daysUsed">Used days</label>
-              <input id="daysUsed" type="number" min="0" max="31" placeholder="e.g., 12" />
-            </div>
-            <div>
-              <label>&nbsp;</label>
-              <div class="btns">
-                <button class="btn primary" id="calcBtn">Calculate</button>
-                <button class="btn ghost" id="clearBtn">Clear</button>
+
+            <!-- Lease ranges -->
+            <div id="dateRanges">
+              <div class="row">
+                <div>
+                  <label>1st lease start</label>
+                  <input type="date" id="start1" />
+                </div>
+                <div>
+                  <label>1st lease end</label>
+                  <input type="date" id="end1" />
+                </div>
+              </div>
+              <div class="row">
+                <div>
+                  <label>2nd lease start</label>
+                  <input type="date" id="start2" />
+                </div>
+                <div>
+                  <label>2nd lease end</label>
+                  <input type="date" id="end2" />
+                </div>
+              </div>
+              <div class="row">
+                <div>
+                  <label>3rd lease start</label>
+                  <input type="date" id="start3" />
+                </div>
+                <div>
+                  <label>3rd lease end</label>
+                  <input type="date" id="end3" />
+                </div>
               </div>
             </div>
-          </div>
-          <div class="row">
-            <div>
-              <label for="startDate">Start date</label>
-              <input id="startDate" type="date" />
+
+            <div class="btns" style="margin-top:10px">
+              <button class="btn primary" id="calcBtn" type="button">Calculate</button>
+              <button class="btn ghost" id="clearBtn" type="button">Clear</button>
             </div>
-            <div>
-              <label for="endDate">End date</label>
-              <input id="endDate" type="date" />
-            </div>
-          </div>
-          <div class="row">
-            <div>
-              <label class="muted"><input id="inclusive" type="checkbox" checked /> Include end day</label>
-            </div>
-            <div class="btns">
-              <button class="btn" id="countDaysBtn">Fill used days</button>
-            </div>
-          </div>
-          <p class="note">Tip: Use this when you have check-in/out dates to auto-fill "Used days".</p>
+          </form>
         </div>
       </section>
+
       <section class="card" aria-label="results">
-        <div class="hd">
-          <strong>Results</strong>
+        <div class="hd"><strong>Results</strong>
           <div class="btns">
-            <button class="btn" id="copyBtn">Copy result</button>
-            <button class="btn" id="copySheetBtn">Copy as CSV</button>
-            <button class="btn" id="downloadCsvBtn">Download CSV</button>
-            <button class="btn" id="downloadXlsxBtn">Download XLSX</button>
+            <button class="btn" id="downloadCsvBtn" type="button">Download CSV</button>
+            <button class="btn" id="downloadXlsxBtn" type="button">Download XLSX</button>
           </div>
         </div>
         <div class="bd">
           <div class="result">
-            <div class="pill"><span class="muted">Per day</span> <strong id="perDay">—</strong></div>
-            <div class="pill"><span class="muted">Proportional value</span> <strong id="proportional">—</strong></div>
+            <div class="pill"><span class="note">Per day</span> <strong id="perDay">—</strong></div>
+            <div class="pill"><span class="note">1st lease <span id="d1" class="note"></span></span> <strong id="range1">—</strong></div>
+            <div class="pill"><span class="note">2nd lease <span id="d2" class="note"></span></span> <strong id="range2">—</strong></div>
+            <div class="pill"><span class="note">3rd lease <span id="d3" class="note"></span></span> <strong id="range3">—</strong></div>
+            <div class="pill"><span class="note">Total</span> <strong id="total">—</strong></div>
           </div>
-          <p class="note" id="note">Enter all 3 fields to see the values. If "Used days" exceeds "Days in month", we’ll warn you here.</p>
         </div>
       </section>
     </div>
-    <div class="footer">Made by <strong>Mari Harouche</strong> with love &lt;3</div>
+
+    <div class="footer">
+      Made by <strong>Mari Harouche</strong> with love &lt;3<br>
+      <span class="note">Formula: (Monthly Rent ÷ Days in Month) × Number of Days in Lease.</span>
+    </div>
   </div>
 
   <!-- External libs for XLSX export with styles -->
@@ -185,180 +173,204 @@
   <script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
 
   <script>
-    const el = (id) => document.getElementById(id);
+  document.addEventListener('DOMContentLoaded', () => {
+    // ===== Elements
+    const monthly = document.getElementById('monthly');
+    const daysInMonth = document.getElementById('daysInMonth');
+    const perDayEl = document.getElementById('perDay');
+    const r1El = document.getElementById('range1');
+    const r2El = document.getElementById('range2');
+    const r3El = document.getElementById('range3');
+    const totalEl = document.getElementById('total');
 
-    const monthly = el('monthly');
-    const daysInMonth = el('daysInMonth');
-    const daysUsed = el('daysUsed');
-    const rounding = el('rounding');
-    const currency = el('currency');
-    const perDay = el('perDay');
-    const proportional = el('proportional');
-    const note = el('note');
-    const statusMsg = el('statusMsg');
+    const start1 = document.getElementById('start1');
+    const end1   = document.getElementById('end1');
+    const start2 = document.getElementById('start2');
+    const end2   = document.getElementById('end2');
+    const start3 = document.getElementById('start3');
+    const end3   = document.getElementById('end3');
 
-    const presets = document.querySelectorAll('.chip[data-preset]');
-    const dayChips = document.querySelectorAll('.chip[data-days]');
+    const calcBtn = document.getElementById('calcBtn');
+    const clearBtn = document.getElementById('clearBtn');
+    const downloadCsvBtn = document.getElementById('downloadCsvBtn');
+    const downloadXlsxBtn = document.getElementById('downloadXlsxBtn');
 
-    const calcBtn = el('calcBtn');
-    const clearBtn = el('clearBtn');
-    const copyBtn = el('copyBtn');
-    const copySheetBtn = el('copySheetBtn');
-    const downloadCsvBtn = el('downloadCsvBtn');
-    const downloadXlsxBtn = el('downloadXlsxBtn');
-    const countDaysBtn = el('countDaysBtn');
-    const startDate = el('startDate');
-    const endDate = el('endDate');
-    const inclusive = el('inclusive');
+    const d1Label = document.getElementById('d1');
+    const d2Label = document.getElementById('d2');
+    const d3Label = document.getElementById('d3');
 
-    const currencyMap = {
-      USD: { locale: 'en-US', code: 'USD', excelFmt: '[$$-409]#,##0.00' },
-      BRL: { locale: 'pt-BR', code: 'BRL', excelFmt: '[$R$-416] #,##0.00' },
-      EUR: { locale: 'de-DE', code: 'EUR', excelFmt: '[$€-407] #,##0.00' }
-    };
+    // Delegate chips (robust even if HTML changes)
+    document.addEventListener('click', (e)=>{
+      const t = e.target.closest('.chip[data-days]');
+      if(!t) return;
+      e.preventDefault();
+      daysInMonth.value = t.dataset.days;
+      compute();
+    });
 
+    // ===== Helpers
     function parseMoney(input){
       if(!input) return NaN;
-      const s = (''+input).replace(/\s/g,'').replace(/\.(?=\d{3}(\D|$))/g,'').replace(/,/g,'.');
+      const s = String(input)
+        .replace(/\s/g,'')
+        .replace(/\.(?=\d{3}(\D|$))/g,'')
+        .replace(/,/g,'.');
       return Number(s);
     }
-    function formatMoney(value, cur){
-      const { locale, code } = currencyMap[cur] || currencyMap.USD;
+    function formatMoney(value){
       if(!isFinite(value)) return '—';
-      return new Intl.NumberFormat(locale, { style:'currency', currency: code, maximumFractionDigits: 2 }).format(value);
+      return new Intl.NumberFormat('en-US', { style:'currency', currency:'USD' }).format(value);
     }
-    function applyRounding(value){
-      if(!isFinite(value)) return NaN;
-      const mode = rounding.value; const cents = value * 100;
-      if(mode === 'up') return Math.ceil(cents)/100;
-      if(mode === 'down') return Math.floor(cents)/100;
-      return Math.round(cents)/100;
+    function daysBetween(start, end){
+      if(!start || !end) return 0;
+      const [sy, sm, sd] = start.split('-').map(Number);
+      const [ey, em, ed] = end.split('-').map(Number);
+      const a = Date.UTC(sy, (sm||1)-1, sd||1);
+      const b = Date.UTC(ey, (em||1)-1, ed||1);
+      const diffDays = Math.floor((b - a) / (1000*60*60*24)) + 1; // inclusive
+      return diffDays > 0 ? diffDays : 0;
     }
 
+    // ===== Core compute
     function compute(){
       const m = parseMoney(monthly.value);
       const dim = Number(daysInMonth.value);
-      const du = Number(daysUsed.value);
-      let warn = '';
-      if(du > dim && dim>0) warn = '⚠ "Used days" is greater than "Days in month".';
-      if(dim === 0 || dim === Infinity || isNaN(dim)) statusMsg.textContent = 'Enter the days in month.'; else statusMsg.textContent = 'Ready to calculate';
-      const perDayRaw = m/dim; const perDayRounded = applyRounding(perDayRaw);
-      const proportionalRaw = perDayRaw * du; const proportionalRounded = applyRounding(proportionalRaw);
-      perDay.textContent = formatMoney(perDayRounded, currency.value);
-      proportional.textContent = formatMoney(proportionalRounded, currency.value);
-      if(!isFinite(perDayRaw) || !isFinite(proportionalRaw)){
-        note.innerHTML = 'Enter all three fields to see the values.';
-      } else {
-        note.innerHTML = (warn ? '<span class="warn">'+warn+'</span><br>' : '') + '<span class="muted">Formula: daily = monthly ÷ days-in-month; proportional = daily × used days.</span>';
+
+      const d1 = daysBetween(start1.value, end1.value);
+      const d2 = daysBetween(start2.value, end2.value);
+      const d3 = daysBetween(start3.value, end3.value);
+
+      // update day labels regardless
+      d1Label.textContent = d1 ? `• ${d1} days` : '';
+      d2Label.textContent = d2 ? `• ${d2} days` : '';
+      d3Label.textContent = d3 ? `• ${d3} days` : '';
+
+      if(!isFinite(m) || !isFinite(dim) || dim<=0){
+        perDayEl.textContent = '—';
+        r1El.textContent = d1 ? '—' : '—';
+        r2El.textContent = d2 ? '—' : '—';
+        r3El.textContent = d3 ? '—' : '—';
+        totalEl.textContent = (d1||d2||d3) ? '—' : '—';
+        return null;
       }
-      return { m, dim, du, perDay: perDayRounded, proportional: proportionalRounded };
+
+      const perDay = m / dim;
+      perDayEl.textContent = formatMoney(perDay);
+
+      const v1 = perDay * d1;
+      const v2 = perDay * d2;
+      const v3 = perDay * d3;
+      const total = v1 + v2 + v3;
+
+      r1El.textContent = d1 ? formatMoney(v1) : '—';
+      r2El.textContent = d2 ? formatMoney(v2) : '—';
+      r3El.textContent = d3 ? formatMoney(v3) : '—';
+      totalEl.textContent = (d1||d2||d3) ? formatMoney(total) : '—';
+
+      return { m, dim, perDay, d1, d2, d3, v1, v2, v3, total };
     }
 
+    // ===== Clear
     function clearAll(){
-      monthly.value = ''; daysInMonth.value = ''; daysUsed.value = '';
-      startDate.value = ''; endDate.value = ''; inclusive.checked = true;
-      perDay.textContent = '—'; proportional.textContent = '—';
-      note.textContent = 'Enter all 3 fields to see the values. If "Used days" exceeds "Days in month", we’ll warn you here.';
-      statusMsg.textContent = 'Ready to calculate';
+      monthly.value=''; daysInMonth.value='';
+      start1.value=''; end1.value='';
+      start2.value=''; end2.value='';
+      start3.value=''; end3.value='';
+      compute();
     }
 
-    function copyResult(){
-      const { perDay: pd, proportional: pp } = compute();
-      if(!isFinite(pd) || !isFinite(pp)) return alert('Fill the fields before copying.');
-      const text = [`Per day: ${formatMoney(pd, currency.value)}`, `Proportional: ${formatMoney(pp, currency.value)}`].join('\n');
-      navigator.clipboard.writeText(text).then(()=>{ statusMsg.textContent = 'Result copied ✔'; setTimeout(()=> statusMsg.textContent = 'Ready to calculate', 1500); });
-    }
-
+    // ===== CSV / XLSX helpers
     function toCSVRow(arr){
-      return arr.map(v => { const s = String(v); return /[",\n]/.test(s) ? '"'+s.replace(/"/g,'""')+'"' : s; }).join(',');
+      return arr.map(v => {
+        const s = String(v ?? '');
+        return /[",\n]/.test(s) ? '"'+s.replace(/"/g,'""')+'"' : s;
+      }).join(',');
     }
-    function copyAsCSV(){
-      const { m, dim, du, perDay: pd, proportional: pp } = compute();
-      if(!isFinite(m) || !isFinite(dim) || !isFinite(du) || !isFinite(pd) || !isFinite(pp)) return alert('Fill Monthly, Days in month and Used days before copying.');
-      const header = toCSVRow(['Monthly','DaysInMonth','UsedDays','PerDay','Proportional']);
-      const row = toCSVRow([m.toFixed(2), dim, du, pd.toFixed(2), pp.toFixed(2)]);
-      navigator.clipboard.writeText(header+'\n'+row).then(()=>{ statusMsg.textContent = 'CSV copied ✔'; setTimeout(()=> statusMsg.textContent = 'Ready to calculate', 1500); });
+    function dateStamp(){
+      const d = new Date();
+      const y = d.getFullYear();
+      const m = String(d.getMonth()+1).padStart(2,'0');
+      const day = String(d.getDate()).padStart(2,'0');
+      return `${y}-${m}-${day}`;
     }
+
     function downloadCSV(){
-      const { m, dim, du, perDay: pd, proportional: pp } = compute();
-      if(!isFinite(m) || !isFinite(dim) || !isFinite(du) || !isFinite(pd) || !isFinite(pp)) return alert('Fill Monthly, Days in month and Used days before downloading.');
-      const header = toCSVRow(['Monthly','DaysInMonth','UsedDays','PerDay','Proportional']);
-      const row = toCSVRow([m.toFixed(2), dim, du, pd.toFixed(2), pp.toFixed(2)]);
-      const blob = new Blob([header+'\n'+row], { type: 'text/csv;charset=utf-8;' });
-      saveAs(blob, 'rent-calculation.csv');
-      statusMsg.textContent = 'CSV downloaded ✔'; setTimeout(()=> statusMsg.textContent = 'Ready to calculate', 1500);
+      const data = compute();
+      if(!data){ alert('Fill Monthly and Days in month first.'); return; }
+      const { m, dim, perDay, d1, d2, d3, v1, v2, v3, total } = data;
+      let rows = [];
+      rows.push(toCSVRow(['Monthly',m.toFixed(2),'DaysInMonth',dim,'PerDay',perDay.toFixed(2)]));
+      rows.push('');
+      rows.push(toCSVRow(['LeaseNo','Days','Value']));
+      if(d1>0) rows.push(toCSVRow(['1st', d1, v1.toFixed(2)]));
+      if(d2>0) rows.push(toCSVRow(['2nd', d2, v2.toFixed(2)]));
+      if(d3>0) rows.push(toCSVRow(['3rd', d3, v3.toFixed(2)]));
+      rows.push(toCSVRow(['Total','', total.toFixed(2)]));
+      const blob = new Blob([rows.join('\n')], { type: 'text/csv;charset=utf-8;' });
+      saveAs(blob, `rent-calculation_${dateStamp()}.csv`);
     }
 
     async function downloadXLSX(){
-      if(!window.ExcelJS || !window.saveAs){ alert('Exporter not loaded. Check your connection and try again.'); return; }
-      const { m, dim, du, perDay: pd, proportional: pp } = compute();
-      if(!isFinite(m) || !isFinite(dim) || !isFinite(du) || !isFinite(pd) || !isFinite(pp)) return alert('Fill Monthly, Days in month and Used days before downloading.');
+      if(!window.ExcelJS || !window.saveAs){ alert('Exporter not loaded.'); return; }
+      const data = compute();
+      if(!data){ alert('Fill Monthly and Days in month first.'); return; }
+      const { m, dim, perDay, d1, d2, d3, v1, v2, v3, total } = data;
 
       const wb = new ExcelJS.Workbook();
       wb.creator = 'Mari Harouche'; wb.created = new Date();
-      const ws = wb.addWorksheet('Rent Calculation');
+      const ws = wb.addWorksheet('Rent Calc');
 
-      // Columns config (header with bold style via ExcelJS)
-      ws.columns = [
-        { header: 'Monthly', key: 'monthly', width: 14 },
-        { header: 'DaysInMonth', key: 'daysInMonth', width: 14 },
-        { header: 'UsedDays', key: 'usedDays', width: 12 },
-        { header: 'PerDay', key: 'perDay', width: 12 },
-        { header: 'Proportional', key: 'proportional', width: 14 },
-      ];
+      // Summary row
+      ws.addRow(['Monthly', m, 'DaysInMonth', dim, 'PerDay', perDay]);
+      ws.getRow(1).font = { bold:true };
+      ws.getCell(1,2).numFmt = '[$$-409]#,##0.00';
+      ws.getCell(1,4).numFmt = '0';
+      ws.getCell(1,6).numFmt = '[$$-409]#,##0.00';
+      ws.addRow([]);
 
-      // Add row
-      ws.addRow({ monthly: m, daysInMonth: dim, usedDays: du, perDay: pd, proportional: pp });
-
-      // Style header bold and center
-      const headerRow = ws.getRow(1);
-      headerRow.font = { bold: true };
-      headerRow.alignment = { vertical: 'middle', horizontal: 'center' };
-
-      // Number formats
-      const fmt = (currencyMap[currency.value] || currencyMap.USD).excelFmt;
-      ws.getColumn('monthly').numFmt = fmt;
-      ws.getColumn('perDay').numFmt = fmt;
-      ws.getColumn('proportional').numFmt = fmt;
-      ws.getColumn('daysInMonth').numFmt = '0';
-      ws.getColumn('usedDays').numFmt = '0';
-
-      // Borders (subtle) for header and data row
-      [1,2].forEach(r => {
-        ws.getRow(r).eachCell(cell => {
-          cell.border = { top:{style:'thin', color:{argb:'FFE5E7EB'}}, left:{style:'thin', color:{argb:'FFE5E7EB'}}, right:{style:'thin', color:{argb:'FFE5E7EB'}}, bottom:{style:'thin', color:{argb:'FFE5E7EB'}} };
-        });
+      // Header styled
+      const headerRow = ws.addRow(['LeaseNo','Days','Value']);
+      headerRow.font = { bold:true, color:{argb:'FF111827'} };
+      headerRow.alignment = { horizontal:'center', vertical:'middle' };
+      headerRow.eachCell(c => {
+        c.fill = { type:'pattern', pattern:'solid', fgColor:{ argb:'FFDBEAFE' } };
+        c.border = { top:{style:'thin', color:{argb:'FFCBD5E1'}}, left:{style:'thin', color:{argb:'FFCBD5E1'}}, right:{style:'thin', color:{argb:'FFCBD5E1'}}, bottom:{style:'thin', color:{argb:'FFCBD5E1'}} };
       });
 
-      // Save
+      // Data rows
+      if(d1>0){ const r=ws.addRow(['1st', d1, v1]); r.getCell(2).numFmt='0'; r.getCell(3).numFmt='[$$-409]#,##0.00'; r.getCell(1).alignment={horizontal:'center'}; }
+      if(d2>0){ const r=ws.addRow(['2nd', d2, v2]); r.getCell(2).numFmt='0'; r.getCell(3).numFmt='[$$-409]#,##0.00'; r.getCell(1).alignment={horizontal:'center'}; }
+      if(d3>0){ const r=ws.addRow(['3rd', d3, v3]); r.getCell(2).numFmt='0'; r.getCell(3).numFmt='[$$-409]#,##0.00'; r.getCell(1).alignment={horizontal:'center'}; }
+
+      // Total
+      const totalRow = ws.addRow(['Total','', total]);
+      totalRow.font = { bold:true };
+      totalRow.getCell(3).numFmt = '[$$-409]#,##0.00';
+      totalRow.eachCell(c => {
+        c.fill = { type:'pattern', pattern:'solid', fgColor:{ argb:'FFF3F4F6' } };
+        c.border = { top:{style:'thin', color:{argb:'FFCBD5E1'}}, left:{style:'thin', color:{argb:'FFCBD5E1'}}, right:{style:'thin', color:{argb:'FFCBD5E1'}}, bottom:{style:'thin', color:{argb:'FFCBD5E1'}} };
+      });
+
+      // Widths
+      ws.getColumn(1).width = 12; ws.getColumn(2).width = 10; ws.getColumn(3).width = 14;
+
       const buf = await wb.xlsx.writeBuffer();
-      saveAs(new Blob([buf], {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}), 'rent-calculation.xlsx');
-      statusMsg.textContent = 'XLSX downloaded ✔'; setTimeout(()=> statusMsg.textContent = 'Ready to calculate', 1500);
+      saveAs(new Blob([buf], {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}), `rent-calculation_${dateStamp()}.xlsx`);
     }
 
-    function daysBetween(){
-      if(!startDate.value || !endDate.value) return alert('Select both dates.');
-      const a = new Date(startDate.value + 'T00:00:00');
-      const b = new Date(endDate.value + 'T00:00:00');
-      const ms = b - a; if(ms < 0) return alert('End date must be after start date.');
-      const diff = ms / (1000*60*60*24); const days = diff + (inclusive.checked ? 1 : 0);
-      daysUsed.value = String(days); compute();
-    }
+    // ===== Wire events (auto-calc)
+    [monthly, daysInMonth, start1, end1, start2, end2, start3, end3].forEach(el =>{
+      el.addEventListener('input', compute);
+      el.addEventListener('change', compute);
+    });
+    calcBtn.addEventListener('click', (e)=>{ e.preventDefault(); compute(); });
+    clearBtn.addEventListener('click', (e)=>{ e.preventDefault(); clearAll(); });
+    downloadCsvBtn.addEventListener('click', (e)=>{ e.preventDefault(); downloadCSV(); });
+    downloadXlsxBtn.addEventListener('click', (e)=>{ e.preventDefault(); downloadXLSX(); });
 
-    // Events
-    [monthly, daysInMonth, daysUsed, rounding, currency].forEach(elm => { elm.addEventListener('input', compute); elm.addEventListener('change', compute); });
-    calcBtn.addEventListener('click', compute);
-    clearBtn.addEventListener('click', clearAll);
-    copyBtn.addEventListener('click', copyResult);
-    copySheetBtn.addEventListener('click', copyAsCSV);
-    downloadCsvBtn.addEventListener('click', downloadCSV);
-    downloadXlsxBtn.addEventListener('click', downloadXLSX);
-    countDaysBtn.addEventListener('click', daysBetween);
-
-    presets.forEach(btn => btn.addEventListener('click', () => { const k = btn.dataset.preset; if(k === 'ex1'){ currency.value = 'USD'; monthly.value = '2403.00'; daysInMonth.value = '31'; daysUsed.value = '12'; rounding.value = 'normal'; compute(); } if(k === 'clear') clearAll(); }));
-    dayChips.forEach(btn => btn.addEventListener('click', () => { daysInMonth.value = btn.dataset.days; compute(); }));
-
+    // Initial render
     compute();
+  });
   </script>
 </body>
 </html>
