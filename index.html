@@ -6,31 +6,19 @@
   <title>Real Estate Rent Calculator — Blue · Purple</title>
   <style>
     :root{
-      --bg-1:#eef2ff;
-      --bg-2:#f3e8ff;
-      --panel:#ffffff;
-      --panel-2:#f8faff;
-      --text:#0f172a;
-      --muted:#475569;
-      --brand:#4f46e5;
-      --brand-2:#8b5cf6;
-      --accent:#93c5fd;
-      --ring:rgba(79,70,229,.28);
-      --ok:#10b981;
-      --warn:#f59e0b;
-      --err:#ef4444;
-      --radius:18px;
-      --shadow:0 10px 30px rgba(24, 39, 75, .18);
+      --bg-1:#eef2ff; --bg-2:#f3e8ff; --panel:#ffffff; --panel-2:#f8faff;
+      --text:#0f172a; --muted:#475569; --brand:#4f46e5; --brand-2:#8b5cf6; --accent:#93c5fd;
+      --ring:rgba(79,70,229,.28); --ok:#10b981; --warn:#f59e0b; --err:#ef4444;
+      --radius:18px; --shadow:0 10px 30px rgba(24,39,75,.18);
     }
     *{box-sizing:border-box}
     html,body{height:100%}
     body{
       margin:0; font:16px/1.45 ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial;
       color:var(--text);
-      background:
-        radial-gradient(900px 420px at 10% -10%, rgba(147,197,253,.35), transparent 60%),
-        radial-gradient(800px 520px at 100% -5%, rgba(139,92,246,.28), transparent 62%),
-        linear-gradient(180deg, var(--bg-1), var(--bg-2));
+      background: radial-gradient(900px 420px at 10% -10%, rgba(147,197,253,.35), transparent 60%),
+                 radial-gradient(800px 520px at 100% -5%, rgba(139,92,246,.28), transparent 62%),
+                 linear-gradient(180deg, var(--bg-1), var(--bg-2));
       display:grid; place-items:center; padding:28px;
     }
     .app{width:100%; max-width:980px}
@@ -106,8 +94,8 @@
             <div>
               <label for="currency">Currency</label>
               <select id="currency">
-                <option value="BRL" selected>BRL (R$)</option>
-                <option value="USD">USD ($)</option>
+                <option value="USD" selected>USD ($)</option>
+                <option value="BRL">BRL (R$)</option>
                 <option value="EUR">EUR (€)</option>
               </select>
             </div>
@@ -176,6 +164,8 @@
           <div class="btns">
             <button class="btn" id="copyBtn">Copy result</button>
             <button class="btn" id="copySheetBtn">Copy as CSV</button>
+            <button class="btn" id="downloadCsvBtn">Download CSV</button>
+            <button class="btn" id="downloadXlsxBtn">Download XLSX</button>
           </div>
         </div>
         <div class="bd">
@@ -189,5 +179,186 @@
     </div>
     <div class="footer">Made by <strong>Mari Harouche</strong> with love &lt;3</div>
   </div>
+
+  <!-- External libs for XLSX export with styles -->
+  <script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
+
+  <script>
+    const el = (id) => document.getElementById(id);
+
+    const monthly = el('monthly');
+    const daysInMonth = el('daysInMonth');
+    const daysUsed = el('daysUsed');
+    const rounding = el('rounding');
+    const currency = el('currency');
+    const perDay = el('perDay');
+    const proportional = el('proportional');
+    const note = el('note');
+    const statusMsg = el('statusMsg');
+
+    const presets = document.querySelectorAll('.chip[data-preset]');
+    const dayChips = document.querySelectorAll('.chip[data-days]');
+
+    const calcBtn = el('calcBtn');
+    const clearBtn = el('clearBtn');
+    const copyBtn = el('copyBtn');
+    const copySheetBtn = el('copySheetBtn');
+    const downloadCsvBtn = el('downloadCsvBtn');
+    const downloadXlsxBtn = el('downloadXlsxBtn');
+    const countDaysBtn = el('countDaysBtn');
+    const startDate = el('startDate');
+    const endDate = el('endDate');
+    const inclusive = el('inclusive');
+
+    const currencyMap = {
+      USD: { locale: 'en-US', code: 'USD', excelFmt: '[$$-409]#,##0.00' },
+      BRL: { locale: 'pt-BR', code: 'BRL', excelFmt: '[$R$-416] #,##0.00' },
+      EUR: { locale: 'de-DE', code: 'EUR', excelFmt: '[$€-407] #,##0.00' }
+    };
+
+    function parseMoney(input){
+      if(!input) return NaN;
+      const s = (''+input).replace(/\s/g,'').replace(/\.(?=\d{3}(\D|$))/g,'').replace(/,/g,'.');
+      return Number(s);
+    }
+    function formatMoney(value, cur){
+      const { locale, code } = currencyMap[cur] || currencyMap.USD;
+      if(!isFinite(value)) return '—';
+      return new Intl.NumberFormat(locale, { style:'currency', currency: code, maximumFractionDigits: 2 }).format(value);
+    }
+    function applyRounding(value){
+      if(!isFinite(value)) return NaN;
+      const mode = rounding.value; const cents = value * 100;
+      if(mode === 'up') return Math.ceil(cents)/100;
+      if(mode === 'down') return Math.floor(cents)/100;
+      return Math.round(cents)/100;
+    }
+
+    function compute(){
+      const m = parseMoney(monthly.value);
+      const dim = Number(daysInMonth.value);
+      const du = Number(daysUsed.value);
+      let warn = '';
+      if(du > dim && dim>0) warn = '⚠ "Used days" is greater than "Days in month".';
+      if(dim === 0 || dim === Infinity || isNaN(dim)) statusMsg.textContent = 'Enter the days in month.'; else statusMsg.textContent = 'Ready to calculate';
+      const perDayRaw = m/dim; const perDayRounded = applyRounding(perDayRaw);
+      const proportionalRaw = perDayRaw * du; const proportionalRounded = applyRounding(proportionalRaw);
+      perDay.textContent = formatMoney(perDayRounded, currency.value);
+      proportional.textContent = formatMoney(proportionalRounded, currency.value);
+      if(!isFinite(perDayRaw) || !isFinite(proportionalRaw)){
+        note.innerHTML = 'Enter all three fields to see the values.';
+      } else {
+        note.innerHTML = (warn ? '<span class="warn">'+warn+'</span><br>' : '') + '<span class="muted">Formula: daily = monthly ÷ days-in-month; proportional = daily × used days.</span>';
+      }
+      return { m, dim, du, perDay: perDayRounded, proportional: proportionalRounded };
+    }
+
+    function clearAll(){
+      monthly.value = ''; daysInMonth.value = ''; daysUsed.value = '';
+      startDate.value = ''; endDate.value = ''; inclusive.checked = true;
+      perDay.textContent = '—'; proportional.textContent = '—';
+      note.textContent = 'Enter all 3 fields to see the values. If "Used days" exceeds "Days in month", we’ll warn you here.';
+      statusMsg.textContent = 'Ready to calculate';
+    }
+
+    function copyResult(){
+      const { perDay: pd, proportional: pp } = compute();
+      if(!isFinite(pd) || !isFinite(pp)) return alert('Fill the fields before copying.');
+      const text = [`Per day: ${formatMoney(pd, currency.value)}`, `Proportional: ${formatMoney(pp, currency.value)}`].join('\n');
+      navigator.clipboard.writeText(text).then(()=>{ statusMsg.textContent = 'Result copied ✔'; setTimeout(()=> statusMsg.textContent = 'Ready to calculate', 1500); });
+    }
+
+    function toCSVRow(arr){
+      return arr.map(v => { const s = String(v); return /[",\n]/.test(s) ? '"'+s.replace(/"/g,'""')+'"' : s; }).join(',');
+    }
+    function copyAsCSV(){
+      const { m, dim, du, perDay: pd, proportional: pp } = compute();
+      if(!isFinite(m) || !isFinite(dim) || !isFinite(du) || !isFinite(pd) || !isFinite(pp)) return alert('Fill Monthly, Days in month and Used days before copying.');
+      const header = toCSVRow(['Monthly','DaysInMonth','UsedDays','PerDay','Proportional']);
+      const row = toCSVRow([m.toFixed(2), dim, du, pd.toFixed(2), pp.toFixed(2)]);
+      navigator.clipboard.writeText(header+'\n'+row).then(()=>{ statusMsg.textContent = 'CSV copied ✔'; setTimeout(()=> statusMsg.textContent = 'Ready to calculate', 1500); });
+    }
+    function downloadCSV(){
+      const { m, dim, du, perDay: pd, proportional: pp } = compute();
+      if(!isFinite(m) || !isFinite(dim) || !isFinite(du) || !isFinite(pd) || !isFinite(pp)) return alert('Fill Monthly, Days in month and Used days before downloading.');
+      const header = toCSVRow(['Monthly','DaysInMonth','UsedDays','PerDay','Proportional']);
+      const row = toCSVRow([m.toFixed(2), dim, du, pd.toFixed(2), pp.toFixed(2)]);
+      const blob = new Blob([header+'\n'+row], { type: 'text/csv;charset=utf-8;' });
+      saveAs(blob, 'rent-calculation.csv');
+      statusMsg.textContent = 'CSV downloaded ✔'; setTimeout(()=> statusMsg.textContent = 'Ready to calculate', 1500);
+    }
+
+    async function downloadXLSX(){
+      if(!window.ExcelJS || !window.saveAs){ alert('Exporter not loaded. Check your connection and try again.'); return; }
+      const { m, dim, du, perDay: pd, proportional: pp } = compute();
+      if(!isFinite(m) || !isFinite(dim) || !isFinite(du) || !isFinite(pd) || !isFinite(pp)) return alert('Fill Monthly, Days in month and Used days before downloading.');
+
+      const wb = new ExcelJS.Workbook();
+      wb.creator = 'Mari Harouche'; wb.created = new Date();
+      const ws = wb.addWorksheet('Rent Calculation');
+
+      // Columns config (header with bold style via ExcelJS)
+      ws.columns = [
+        { header: 'Monthly', key: 'monthly', width: 14 },
+        { header: 'DaysInMonth', key: 'daysInMonth', width: 14 },
+        { header: 'UsedDays', key: 'usedDays', width: 12 },
+        { header: 'PerDay', key: 'perDay', width: 12 },
+        { header: 'Proportional', key: 'proportional', width: 14 },
+      ];
+
+      // Add row
+      ws.addRow({ monthly: m, daysInMonth: dim, usedDays: du, perDay: pd, proportional: pp });
+
+      // Style header bold and center
+      const headerRow = ws.getRow(1);
+      headerRow.font = { bold: true };
+      headerRow.alignment = { vertical: 'middle', horizontal: 'center' };
+
+      // Number formats
+      const fmt = (currencyMap[currency.value] || currencyMap.USD).excelFmt;
+      ws.getColumn('monthly').numFmt = fmt;
+      ws.getColumn('perDay').numFmt = fmt;
+      ws.getColumn('proportional').numFmt = fmt;
+      ws.getColumn('daysInMonth').numFmt = '0';
+      ws.getColumn('usedDays').numFmt = '0';
+
+      // Borders (subtle) for header and data row
+      [1,2].forEach(r => {
+        ws.getRow(r).eachCell(cell => {
+          cell.border = { top:{style:'thin', color:{argb:'FFE5E7EB'}}, left:{style:'thin', color:{argb:'FFE5E7EB'}}, right:{style:'thin', color:{argb:'FFE5E7EB'}}, bottom:{style:'thin', color:{argb:'FFE5E7EB'}} };
+        });
+      });
+
+      // Save
+      const buf = await wb.xlsx.writeBuffer();
+      saveAs(new Blob([buf], {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}), 'rent-calculation.xlsx');
+      statusMsg.textContent = 'XLSX downloaded ✔'; setTimeout(()=> statusMsg.textContent = 'Ready to calculate', 1500);
+    }
+
+    function daysBetween(){
+      if(!startDate.value || !endDate.value) return alert('Select both dates.');
+      const a = new Date(startDate.value + 'T00:00:00');
+      const b = new Date(endDate.value + 'T00:00:00');
+      const ms = b - a; if(ms < 0) return alert('End date must be after start date.');
+      const diff = ms / (1000*60*60*24); const days = diff + (inclusive.checked ? 1 : 0);
+      daysUsed.value = String(days); compute();
+    }
+
+    // Events
+    [monthly, daysInMonth, daysUsed, rounding, currency].forEach(elm => { elm.addEventListener('input', compute); elm.addEventListener('change', compute); });
+    calcBtn.addEventListener('click', compute);
+    clearBtn.addEventListener('click', clearAll);
+    copyBtn.addEventListener('click', copyResult);
+    copySheetBtn.addEventListener('click', copyAsCSV);
+    downloadCsvBtn.addEventListener('click', downloadCSV);
+    downloadXlsxBtn.addEventListener('click', downloadXLSX);
+    countDaysBtn.addEventListener('click', daysBetween);
+
+    presets.forEach(btn => btn.addEventListener('click', () => { const k = btn.dataset.preset; if(k === 'ex1'){ currency.value = 'USD'; monthly.value = '2403.00'; daysInMonth.value = '31'; daysUsed.value = '12'; rounding.value = 'normal'; compute(); } if(k === 'clear') clearAll(); }));
+    dayChips.forEach(btn => btn.addEventListener('click', () => { daysInMonth.value = btn.dataset.days; compute(); }));
+
+    compute();
+  </script>
 </body>
 </html>
